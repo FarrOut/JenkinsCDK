@@ -25,17 +25,17 @@ class ServiceStack(Stack):
                               vpc=vpc
                               )
 
-        volume = ecs.Volume(self, "Volume",
-                            name=jenkins_home,
-                            efs_volume_configuration=EfsVolumeConfiguration(
-                                file_system_id=file_system.file_system_id,
-                                transit_encryption='ENABLED',
-                                authorization_config=AuthorizationConfig(
-                                    access_point_id=access_point.access_point_id,
-                                    iam='ENABLED'
-                                ),
-                            )
-                            )
+        volume = ecs.Volume(
+            name=jenkins_home,
+            efs_volume_configuration=EfsVolumeConfiguration(
+                file_system_id=file_system.file_system_id,
+                transit_encryption='ENABLED',
+                authorization_config=AuthorizationConfig(
+                    access_point_id=access_point.access_point_id,
+                    iam='ENABLED'
+                ),
+            )
+        )
 
         fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
                                                             family=app_name,

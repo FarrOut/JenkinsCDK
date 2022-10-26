@@ -3,7 +3,6 @@ import os
 
 import aws_cdk as cdk
 
-from jenkins.jenkins_stack import JenkinsStack
 from jenkins.storage_stack import StorageStack
 from jenkins.network_stack import NetworkStack
 from jenkins.service_stack import ServiceStack
@@ -32,10 +31,6 @@ ServiceStack(app, "ServiceStack",
              vpc=networking.vpc,
              file_system=storage.file_system,
              access_point=storage.access_point,
-             env=default_env,
-             )
-
-JenkinsStack(app, "JenkinsStack",
              env=default_env,
              )
 

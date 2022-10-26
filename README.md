@@ -1,6 +1,9 @@
 
 # Welcome to your CDK Python project!
 
+DevOps with serverless Jenkins and AWS Cloud Development Kit (AWS CDK)
+https://aws.amazon.com/blogs/devops/devops-with-serverless-jenkins-and-aws-cloud-development-kit-aws-cdk/
+
 This is a blank project for CDK development with Python.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.

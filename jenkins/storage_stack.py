@@ -10,7 +10,7 @@ from constructs import Construct
 
 class StorageStack(Stack):
 
-    def __init__(self, scope: Construct, vpc: ec2.Vpc, construct_id: str, jenkins_home: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, vpc: ec2.Vpc, jenkins_home: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         self.file_system = efs.FileSystem(self, "MyEfsFileSystem",

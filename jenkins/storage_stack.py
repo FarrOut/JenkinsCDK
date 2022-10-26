@@ -36,4 +36,3 @@ class StorageStack(Stack):
                                         ),
                                         )
 
-        self.file_system.add_access_point(self, 'EfsAccessPoint', self.access_point)

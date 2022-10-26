@@ -7,7 +7,7 @@ from jenkins.jenkins_stack import JenkinsStack
 # resource in jenkins/jenkins_stack.py
 def test_sqs_queue_created():
     app = core.App()
-    stack = JenkinsStack(app, "jenkins")
+    stack = JenkinsStack(app, "jenkins", app_props)
     template = assertions.Template.from_stack(stack)
 
 #     template.has_resource_properties("AWS::SQS::Queue", {

@@ -4,25 +4,33 @@ import os
 import aws_cdk as cdk
 
 from jenkins.jenkins_stack import JenkinsStack
-
+from jenkins.storage_stack import StorageStack
+from jenkins.network_stack import NetworkStack
+from jenkins.service_stack import ServiceStack
 
 app = cdk.App()
+
+jenkins_home = 'jenkins-home'
+app_name = 'jenkins-cdk'
+
+default_env = cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'),
+                              region=os.getenv('CDK_DEFAULT_REGION'))
+
+NetworkStack(app, "NetworkStack",
+             env=default_env,
+             )
+
+ServiceStack(app, "ServiceStack",
+             env=default_env,
+             )
+
+StorageStack(app, "StorageStack",
+             jenkins_home=jenkins_home,
+             env=default_env,
+             )
+
 JenkinsStack(app, "JenkinsStack",
-    # If you don't specify 'env', this stack will be environment-agnostic.
-    # Account/Region-dependent features and context lookups will not work,
-    # but a single synthesized template can be deployed anywhere.
-
-    # Uncomment the next line to specialize this stack for the AWS Account
-    # and Region that are implied by the current CLI configuration.
-
-    #env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
-
-    # Uncomment the next line if you know exactly what Account and Region you
-    # want to deploy the stack to. */
-
-    #env=cdk.Environment(account='123456789012', region='us-east-1'),
-
-    # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
-    )
+             env=default_env,
+             )
 
 app.synth()

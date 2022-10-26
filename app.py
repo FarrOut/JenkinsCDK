@@ -22,6 +22,7 @@ networking = NetworkStack(app, "NetworkStack",
 
 storage = StorageStack(app, "StorageStack",
                        jenkins_home=jenkins_home,
+                       vpc=networking.vpc,
                        env=default_env,
                        )
 

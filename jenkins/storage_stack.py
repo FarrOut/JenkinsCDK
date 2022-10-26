@@ -23,6 +23,7 @@ class StorageStack(Stack):
                                           )
 
         self.access_point = AccessPoint(self, "AccessPoint",
+                                        file_system=self.file_system,
                                         path=jenkins_home,
                                         posix_user=PosixUser(
                                             uid="1000",

@@ -41,7 +41,7 @@ class ServiceStack(Stack):
                                                             family=app_name,
                                                             memory_limit_mib=2048,
                                                             cpu=1024,
-                                                            volumes=volume,
+                                                            volumes=[volume],
                                                             )
 
         container_def = ContainerDefinition(self, 'ContainerDefinition',
@@ -50,7 +50,7 @@ class ServiceStack(Stack):
                                             logging=LogDriver.aws_logs(
                                                 stream_prefix='jenkins',
                                             ),
-                                            port_mappings=PortMapping(container_port=8080),
+                                            port_mappings=[PortMapping(container_port=8080)],
                                             )
         container_def.add_mount_points(MountPoint(
             container_path='/var/jenkins_home',

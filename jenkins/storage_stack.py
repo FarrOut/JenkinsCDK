@@ -2,13 +2,13 @@ from aws_cdk import (
     # Duration,
     Stack,
     aws_efs as efs,
-    aws_ec2 as ec2, RemovalPolicy,
+    aws_ec2 as ec2, RemovalPolicy, NestedStack,
 )
 from aws_cdk.aws_efs import PosixUser, AccessPoint
 from constructs import Construct
 
 
-class StorageStack(Stack):
+class StorageStack(NestedStack):
 
     def __init__(self, scope: Construct, construct_id: str, vpc: ec2.Vpc, jenkins_home: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)

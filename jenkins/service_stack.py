@@ -4,7 +4,7 @@ from aws_cdk import (
     aws_ec2 as ec2,
     aws_efs as efs,
     aws_ecs as ecs,
-    aws_ecs_patterns as patterns, Duration,
+    aws_ecs_patterns as patterns, Duration, NestedStack,
 )
 from aws_cdk.aws_ecs import EfsVolumeConfiguration, AuthorizationConfig, ContainerImage, LogDriver, ContainerDefinition, \
     PortMapping, MountPoint
@@ -13,7 +13,7 @@ from aws_cdk.aws_ecs_patterns import ApplicationLoadBalancedFargateService, Appl
 from constructs import Construct
 
 
-class ServiceStack(Stack):
+class ServiceStack(NestedStack):
 
     def __init__(self, scope: Construct, construct_id: str, app_name: str, jenkins_home: str, vpc: ec2.Vpc,
                  file_system: efs.FileSystem, access_point: efs.AccessPoint,

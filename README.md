@@ -1,3 +1,8 @@
+# Deploy a Jenkins container using AWS Cloud Development Kit (CDK)
+
+After deploying, access the service using the URL found in the outputs of the JenkinsStack-ServiceStack.
+Find Jenkins' initial setup password in the respective CloudWatch log group.
+
 
 # Welcome to your CDK Python project!
 

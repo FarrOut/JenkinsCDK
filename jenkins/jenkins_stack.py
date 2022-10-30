@@ -16,17 +16,11 @@ class JenkinsStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, app_name: str, jenkins_home: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        env_ = Environment(account=self.account,
-                           region=self.region)
-
-        networking = NetworkStack(self, "NetworkStack",
-                                  env=env_,
-                                  )
+        networking = NetworkStack(self, "NetworkStack", )
 
         storage = StorageStack(self, "StorageStack",
                                jenkins_home=jenkins_home,
                                vpc=networking.vpc,
-                               env=env_,
                                )
 
         ServiceStack(self, "ServiceStack",
@@ -35,5 +29,4 @@ class JenkinsStack(Stack):
                      vpc=networking.vpc,
                      file_system=storage.file_system,
                      access_point=storage.access_point,
-                     env=env_,
                      )

@@ -51,6 +51,8 @@ class ServiceStack(NestedStack):
                                                 stream_prefix='jenkins',
                                             ),
                                             port_mappings=[PortMapping(container_port=8080)],
+                                            start_timeout=Duration.minutes(2),
+                                            stop_timeout=Duration.seconds(30),
                                             )
         container_def.add_mount_points(MountPoint(
             container_path='/var/jenkins_home',
@@ -58,8 +60,9 @@ class ServiceStack(NestedStack):
             source_volume=jenkins_home,
         ))
 
-        load_balanced_fargate_service = ApplicationLoadBalancedFargateService(
+        service = ApplicationLoadBalancedFargateService(
             self, "Service",
+            service_name='Jenkins',
             cluster=cluster,
             task_definition=fargate_task_definition,
             memory_limit_mib=2048,
@@ -68,7 +71,8 @@ class ServiceStack(NestedStack):
             min_healthy_percent=0,
             health_check_grace_period=Duration.minutes(15),
             desired_count=1,
+            # open_listener=True,
+            # assign_public_ip=True,
+            # public_load_balancer=True,
         )
-        load_balanced_fargate_service.listener.connections.allow_to(
-            file_system, ec2.Port.tcp(2049)
-        )
+        service.service.connections.allow_to(file_system, ec2.Port.tcp(2049))

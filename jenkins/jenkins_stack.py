@@ -1,7 +1,7 @@
 import os
 
 from aws_cdk import (
-    # Duration,
+    Duration,
     Stack, Environment,
 )
 from constructs import Construct
@@ -29,4 +29,5 @@ class JenkinsStack(Stack):
                      vpc=networking.vpc,
                      file_system=storage.file_system,
                      access_point=storage.access_point,
+                     timeout=Duration.minutes(10),
                      )

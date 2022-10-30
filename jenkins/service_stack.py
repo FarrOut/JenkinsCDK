@@ -71,8 +71,13 @@ class ServiceStack(NestedStack):
             min_healthy_percent=0,
             health_check_grace_period=Duration.minutes(15),
             desired_count=1,
-            # open_listener=True,
-            # assign_public_ip=True,
-            # public_load_balancer=True,
         )
         service.service.connections.allow_to(file_system, ec2.Port.tcp(2049))
+
+        # Configure Health-check
+        service.target_group.configure_health_check(
+            enabled=True,
+            port='8080',
+            path='/login',
+            interval=Duration.seconds(30),
+        )

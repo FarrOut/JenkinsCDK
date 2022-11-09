@@ -3,9 +3,11 @@ import os
 from aws_cdk import (
     Duration,
     Stack, Environment,
+    aws_ecs as ecs,
 )
 from constructs import Construct
 
+from jenkins.agent_stack import AgentStack
 from jenkins.network_stack import NetworkStack
 from jenkins.service_stack import ServiceStack
 from jenkins.storage_stack import StorageStack
@@ -23,11 +25,23 @@ class JenkinsStack(Stack):
                                vpc=networking.vpc,
                                )
 
+        # Create an ECS cluster
+        cluster = ecs.Cluster(self, "Cluster",
+                              vpc=networking.vpc
+                              )
+
         ServiceStack(self, "ServiceStack",
                      jenkins_home=jenkins_home,
                      app_name=app_name,
-                     vpc=networking.vpc,
+                     cluster=cluster,
                      file_system=storage.file_system,
                      access_point=storage.access_point,
                      timeout=Duration.minutes(10),
                      )
+
+        AgentStack(self, "AgentStack",
+                   jenkins_home=jenkins_home,
+                   app_name=app_name,
+                   cluster=cluster,
+                   timeout=Duration.minutes(10),
+                   )

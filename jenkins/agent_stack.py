@@ -12,51 +12,33 @@ from aws_cdk.aws_ecs_patterns import ApplicationLoadBalancedFargateService
 from constructs import Construct
 
 
-class ServiceStack(NestedStack):
+class AgentStack(NestedStack):
 
     def __init__(self, scope: Construct, construct_id: str, app_name: str, jenkins_home: str, cluster: ecs.Cluster,
                  file_system: efs.FileSystem, access_point: efs.AccessPoint,
                  **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        volume = ecs.Volume(
-            name=jenkins_home,
-            efs_volume_configuration=EfsVolumeConfiguration(
-                file_system_id=file_system.file_system_id,
-                transit_encryption='ENABLED',
-                authorization_config=AuthorizationConfig(
-                    access_point_id=access_point.access_point_id,
-                    iam='ENABLED'
-                ),
-            )
-        )
-
         fargate_task_definition = ecs.FargateTaskDefinition(self, "TaskDef",
                                                             family=app_name,
                                                             memory_limit_mib=2048,
                                                             cpu=1024,
-                                                            volumes=[volume],
                                                             )
 
         container_def = ContainerDefinition(self, 'ContainerDefinition',
                                             task_definition=fargate_task_definition,
-                                            image=ContainerImage.from_registry("jenkins/jenkins:lts"),
+                                            image=ContainerImage.from_registry("jenkins/ssh-agent:alpine"),
                                             logging=LogDriver.aws_logs(
                                                 stream_prefix='jenkins',
                                             ),
-                                            port_mappings=[PortMapping(container_port=8080)],
+                                            port_mappings=[PortMapping(container_port=22)],
                                             start_timeout=Duration.minutes(2),
                                             stop_timeout=Duration.seconds(30),
                                             )
-        container_def.add_mount_points(MountPoint(
-            container_path='/var/jenkins_home',
-            read_only=False,
-            source_volume=jenkins_home,
-        ))
 
         service = ApplicationLoadBalancedFargateService(
-            self, "JenkinsServerService",
-            service_name='Jenkins',
+            self, "JenkinsAgentService",
+            service_name='JenkinsAgent',
             cluster=cluster,
             task_definition=fargate_task_definition,
             memory_limit_mib=2048,
@@ -66,12 +48,12 @@ class ServiceStack(NestedStack):
             health_check_grace_period=Duration.minutes(15),
             desired_count=1,
         )
-        service.service.connections.allow_to(file_system, ec2.Port.tcp(2049))
+        # service.service.connections.allow_to(file_system, ec2.Port.tcp(2049))
 
         # Configure Health-check
-        service.target_group.configure_health_check(
-            enabled=True,
-            port='8080',
-            path='/login',
-            interval=Duration.seconds(30),
-        )
+        # service.target_group.configure_health_check(
+        #     enabled=True,
+        #     port='8080',
+        #     path='/login',
+        #     interval=Duration.seconds(30),
+        # )
